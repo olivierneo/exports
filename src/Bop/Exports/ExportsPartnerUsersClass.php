@@ -44,6 +44,21 @@ class ExportsPartnerUsersClass {
      */
     public function fire($job, $data)
     {
+        $columns = [
+            'id' => 'id',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'email' => 'email',
+            'partner' => 'partner',
+            'source' => 'source',
+            'sponsor' => 'sponsor',
+            'gender' => 'gender',
+            'browser_locale' => 'browser_locale',
+            'used_locale' => 'used_locale',
+            'credentials_validated' => 'credentials_validated',
+            'ip' => 'ip'
+        ];
+
         if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.job.start', $data);}
         if(! isset($data['fileName'])) {$data['fileName'] = $this->usersPartnerFileName . '_' . $data['partner'] . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
@@ -57,6 +72,10 @@ class ExportsPartnerUsersClass {
             $datasToStore = Users::getAllForAPartner($data['partner'], true, $this->take, $data['skip']);
         } catch (Exception $e) {
             Log::error('exports.partnersUsers.all', $e->getMessage());
+        }
+
+        if ($data['skip'] == 0) {
+            array_unshift($datasToStore, $columns);
         }
 
         try {

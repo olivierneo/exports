@@ -4,7 +4,7 @@ return array(
 
     'path' => 'exports',
     'take' => '10000',
-    'senderEmail' => '',
+    'senderEmail' => 'no@no.com',
     'emailTitle' => 'Votre export',
     'usersFileName' => 'users_exports',
     'usersPartnerFileName' => 'users_exports',

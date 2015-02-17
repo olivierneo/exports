@@ -44,6 +44,21 @@ class ExportsWinnersClass {
      */
     public function fire($job, $data)
     {
+        $columns = [
+            'id' => 'id',
+            'user_id' => 'user_id',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'email' => 'email',
+            'gender' => 'gender',
+            'used_locale' => 'used_locale',
+            'partner' => 'partner',
+            'voucher_id' => 'voucher_id',
+            'gift_partner' => 'gift_partner',
+            'gift_name' => 'gift_name',
+            'ip' => 'ip'
+        ];
+
         if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.winners.job.start', $data);}
         if(! isset($data['fileName'])) {$data['fileName'] = $this->winnersFileName . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
@@ -57,6 +72,10 @@ class ExportsWinnersClass {
             $datasToStore = Winners::getAll(true, $this->take, $data['skip']);
         } catch (Exception $e) {
             Log::error('exports.winners.all', $e->getMessage());
+        }
+
+        if ($data['skip'] == 0) {
+            array_unshift($datasToStore, $columns);
         }
 
         try {
