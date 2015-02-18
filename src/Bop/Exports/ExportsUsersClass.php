@@ -44,6 +44,12 @@ class ExportsUsersClass {
      */
     public function fire($job, $data)
     {
+        if ($job->attempts() > 3)
+        {
+            Log::error('exports.users.job.attempts', ['data' => $data, 'job_id' => $job->getJobId()]);
+            $job->delete();
+        }
+
         $columns = [
             'id' => 'id',
             'first_name' => 'first_name',
@@ -59,7 +65,7 @@ class ExportsUsersClass {
             'ip' => 'ip'
         ];
 
-        if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.users.job.start', $data);}
+        if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.users.job.start', ['data' => $data, 'job_id' => $job->getJobId()]);}
         if(! isset($data['fileName'])) {$data['fileName'] = $this->usersFileName . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
         try {
@@ -87,7 +93,7 @@ class ExportsUsersClass {
         $toStore = $usersCounter - $data['skip'];
 
         if ($toStore >= 0){
-            Log::debug('exports.users.job.chunk', $data);
+            Log::debug('exports.users.job.chunk', ['data' => $data, 'job_id' => $job->getJobId()]);
 
             Queue::push('Bop\Exports\ExportsUsersClass', array('fileName' => $data['fileName'], 'take' => $this->take, 'skip' => $data['skip'] + $this->take, 'email' => $data['email']));
         } else {
@@ -95,12 +101,7 @@ class ExportsUsersClass {
 
             Queue::push('Bop\Exports\ExportsEmailSenderClass', array('fileName' => $data['fileName'], 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
 
-            Log::debug('exports.users.job.end', $data);
-        }
-
-        if ($job->attempts() > 3)
-        {
-            Log::error('job', $data);
+            Log::debug('exports.users.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $job->delete();

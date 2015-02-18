@@ -44,6 +44,12 @@ class ExportsWinnersClass {
      */
     public function fire($job, $data)
     {
+        if ($job->attempts() > 3)
+        {
+            Log::error('exports.winners.job.attempts', ['data' => $data, 'job_id' => $job->getJobId()]);
+            $job->delete();
+        }
+
         $columns = [
             'id' => 'id',
             'user_id' => 'user_id',
@@ -59,7 +65,7 @@ class ExportsWinnersClass {
             'ip' => 'ip'
         ];
 
-        if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.winners.job.start', $data);}
+        if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.winners.job.start', ['data' => $data, 'job_id' => $job->getJobId()]);}
         if(! isset($data['fileName'])) {$data['fileName'] = $this->winnersFileName . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
         try {
@@ -87,7 +93,7 @@ class ExportsWinnersClass {
         $toStore = $usersCounter - $data['skip'];
 
         if ($toStore >= 0){
-            Log::debug('exports.winners.job.chunk', $data);
+            Log::debug('exports.winners.job.chunk', ['data' => $data, 'job_id' => $job->getJobId()]);
 
             Queue::push('Bop\Exports\ExportsWinnersClass', array('fileName' => $data['fileName'], 'take' => $this->take, 'skip' => $data['skip'] + $this->take, 'email' => $data['email']));
         } else {
@@ -95,12 +101,7 @@ class ExportsWinnersClass {
 
             Queue::push('Bop\Exports\ExportsEmailSenderClass', array('fileName' => $data['fileName'], 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
 
-            Log::debug('exports.winners.job.end', $data);
-        }
-
-        if ($job->attempts() > 3)
-        {
-            Log::error('job', $data);
+            Log::debug('exports.winners.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $job->delete();
