@@ -46,8 +46,10 @@ class ExportsPartnerUsersClass {
     {
         if ($job->attempts() > 3)
         {
-            Log::error('exports.partnerUsers.job.attempts', ['data' => $data, 'job_id' => $job->getJobId()]);
+            Log::error('exports.users.job.attempts', ['data' => $data, 'job_id' => $job->getJobId()]);
             $job->delete();
+        } else {
+            Log::error('exports.users.job.attempts.' . $job->attempts(), ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $columns = [
@@ -71,13 +73,13 @@ class ExportsPartnerUsersClass {
         try {
             $usersCounter = Users::where('partner', '=', $data['partner'])->count();
         } catch (Exception $e) {
-            Log::error('exports.partnersUsers.counter', $e->getMessage());
+            Log::error('exports.partnerUsers.counter', $e->getMessage());
         }
 
         try {
             $datasToStore = Users::getAllForAPartner($data['partner'], true, $this->take, $data['skip']);
         } catch (Exception $e) {
-            Log::error('exports.partnersUsers.all', $e->getMessage());
+            Log::error('exports.partnerUsers.all', $e->getMessage());
         }
 
         if ($data['skip'] == 0) {
@@ -87,13 +89,13 @@ class ExportsPartnerUsersClass {
         try {
             $store = ExportsStoreClass::store($this->path, $data['fileName'], $datasToStore);
         } catch (Exception $e) {
-            Log::error('exports.partnersUsers.store', $e->getMessage());
+            Log::error('exports.partnerUsers.store', $e->getMessage());
         }
 
         $toStore = $usersCounter - $data['skip'];
 
         if ($toStore >= 0){
-            Log::debug('exports.partnersUsers.job.chunk', ['data' => $data, 'job_id' => $job->getJobId()]);
+            Log::debug('exports.partnerUsers.job.chunk', ['data' => $data, 'job_id' => $job->getJobId()]);
 
             Queue::push('Bop\Exports\ExportsPartnerUsersClass', array('partner' => $data['partner'], 'fileName' => $data['fileName'], 'take' => $this->take, 'skip' => $data['skip'] + $this->take, 'email' => $data['email']));
         } else {
@@ -101,7 +103,7 @@ class ExportsPartnerUsersClass {
 
             Queue::push('Bop\Exports\ExportsEmailSenderClass', array('fileName' => $data['fileName'], 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
 
-            Log::debug('exports.partnersUsers.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
+            Log::debug('exports.partnerUsers.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $job->delete();

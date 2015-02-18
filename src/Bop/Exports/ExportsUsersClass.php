@@ -48,6 +48,8 @@ class ExportsUsersClass {
         {
             Log::error('exports.users.job.attempts', ['data' => $data, 'job_id' => $job->getJobId()]);
             $job->delete();
+        } else {
+            Log::error('exports.users.job.attempts.' . $job->attempts(), ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $columns = [
