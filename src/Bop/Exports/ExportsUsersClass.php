@@ -74,7 +74,7 @@ class ExportsUsersClass {
         if(! isset($data['fileName'])) {$data['fileName'] = $this->usersFileName . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
         try {
-            $usersCounter = Users::all()->count();
+            $usersCounter = intval(Users::orderby('created_at', 'desc')->select('id')->first()->id);
         } catch (Exception $e) {
             Log::error('exports.users.counter', $e->getMessage());
         }
