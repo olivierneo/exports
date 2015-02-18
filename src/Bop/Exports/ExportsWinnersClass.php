@@ -49,10 +49,10 @@ class ExportsWinnersClass {
 
         if ($job->attempts() > 3)
         {
-            Log::error('exports.users.job.attempts.max', ['data' => $data, 'job_id' => $job->getJobId()]);
+            Log::error('exports.winners.job.attempts.max', ['data' => $data, 'job_id' => $job->getJobId()]);
             $job->delete();
         } else {
-            Log::debug('exports.users.job.attempts.' . $job->attempts(), ['data' => $data, 'job_id' => $job->getJobId()]);
+            Log::debug('exports.winners.job.attempts.' . $job->attempts(), ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $columns = [
