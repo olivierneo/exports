@@ -57,7 +57,7 @@ class Winners extends \Eloquent {
 				$d->gift_partner = $gift[$d->gift_id]['partner'];
 				$d->gift_description = $gift[$d->gift_id]['public_description_single']['fr'];
 
-				$d->ip = $user['ip'];
+				//$d->ip = $user['ip'];
 
 				unset ($d->time);
 				unset ($d->created_at);

@@ -66,7 +66,7 @@ class ExportsWinnersClass {
             'voucher_id' => 'voucher_id',
             'gift_partner' => 'gift_partner',
             'gift_name' => 'gift_name',
-            'ip' => 'ip'
+            //'ip' => 'ip'
         ];
 
         if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.winners.job.start', ['data' => $data, 'job_id' => $job->getJobId()]);}
