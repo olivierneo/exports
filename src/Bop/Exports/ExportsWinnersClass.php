@@ -14,6 +14,7 @@ use Input;
 use Queue;
 use Config;
 use Carbon\Carbon;
+use Zipper;
 
 
 
@@ -103,12 +104,30 @@ class ExportsWinnersClass {
         } else {
             $job->delete();
 
-            Queue::push('Bop\Exports\ExportsEmailSenderClass', array('fileName' => $data['fileName'], 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
+            Queue::push('Bop\Exports\ExportsWinnersClass@ziptheFile', array('fileName' => $data['fileName'], 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
 
-            Log::debug('exports.winners.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
+            //Log::debug('exports.partnerUsers.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
         }
 
         $job->delete();
     }
 
+    public function zipTheFile($job, $data){
+
+        $file = storage_path($this->path . '/' . $data['fileName']);
+
+        try {
+            $zip = Zipper::make(storage_path($this->path . '/' . $data['fileName']) . '.zip')->add($file);
+        } catch (Exception $e) {
+            Log::error('exports.winners.job.zip', $e->getMessage());
+        }
+
+        Log::debug('exports.winners.job.zip.zipped', ['data' => $data, 'job_id' => $job->getJobId()]);
+
+        $job->delete();
+
+        Queue::push('Bop\Exports\ExportsEmailSenderClass', array('fileName' => $data['fileName'] . '.zip' , 'path' => $this->path, 'email' => $data['email'], 'senderEmail' => $this->senderEmail, 'emailTitle' => $this->emailTitle));
+
+        Log::debug('exports.winners.job.end', ['data' => $data, 'job_id' => $job->getJobId()]);
+    }
 }
