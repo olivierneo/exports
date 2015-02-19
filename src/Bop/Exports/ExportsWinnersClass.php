@@ -74,7 +74,7 @@ class ExportsWinnersClass {
         if(! isset($data['fileName'])) {$data['fileName'] = $this->winnersFileName . '_' . Carbon::now()->toDateString() . '_' . time() . '.csv';}
 
         try {
-            $usersCounter = Winners::all()->count();
+            $usersCounter = intval(Winners::orderby('created_at', 'desc')->select('id')->first()->id);
         } catch (Exception $e) {
             Log::error('exports.winners.counter', $e->getMessage());
         }
