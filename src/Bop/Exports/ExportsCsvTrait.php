@@ -35,7 +35,7 @@ trait ExportsCsvTrait {
             }
         }
 
-        return implode( $delimiter, $output ) . "\n";
+        return utf8_decode(implode( $delimiter, $output )) . "\n";
     }
     
 }
