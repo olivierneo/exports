@@ -67,7 +67,9 @@ class ExportsUsersClass {
             'browser_locale' => 'browser_locale',
             'used_locale' => 'used_locale',
             'credentials_validated' => 'credentials_validated',
-            'ip' => 'ip'
+            'ip' => 'ip',
+            'created_at' => 'created_at',
+            'updated_at' => 'updated_at'
         ];
 
         if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.users.job.start', ['data' => $data, 'job_id' => $job->getJobId()]);}

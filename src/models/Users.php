@@ -27,9 +27,9 @@ class Users extends \Eloquent {
 			//$d = self::model;
 
 			if ($take == 0) {
-				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip')->get();
+				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->get();
 			} else {
-				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip')->skip($skip)->take($take)->get();
+				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->skip($skip)->take($take)->get();
 			}
 			return $u->toArray();
 		} else {
@@ -53,9 +53,9 @@ class Users extends \Eloquent {
 			$d = self::where('partner', $partner);
 
 			if ($take == 0) {
-				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip')->get();
+				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->get();
 			} else {
-				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip')->skip($skip)->take($take)->get();
+				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->skip($skip)->take($take)->get();
 			}
 			return $u->toArray();
 		} else {
