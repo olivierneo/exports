@@ -27,9 +27,9 @@ class Users extends \Eloquent {
 			//$d = self::model;
 
 			if ($take == 0) {
-				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->get();
+				$u = self::join('countries', 'users.id', '=', 'countries.user_id')->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.partner', 'users.source', 'users.sponsor', 'users.gender', 'users.browser_locale', 'users.used_locale', 'users.credentials_validated', 'users.ip', 'countries.postal_code', 'countries.city', 'countries.region_name', 'countries.country_name')->get();
 			} else {
-				$u = self::select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->skip($skip)->take($take)->get();
+				$u = self::join('countries', 'users.id', '=', 'countries.user_id')->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.partner', 'users.source', 'users.sponsor', 'users.gender', 'users.browser_locale', 'users.used_locale', 'users.credentials_validated', 'users.ip', 'countries.postal_code', 'countries.city', 'countries.region_name', 'countries.country_name')->skip($skip)->take($take)->get();
 			}
 			return $u->toArray();
 		} else {
@@ -53,9 +53,9 @@ class Users extends \Eloquent {
 			$d = self::where('partner', $partner);
 
 			if ($take == 0) {
-				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->get();
+				$u = $d->join('countries', 'users.id', '=', 'countries.user_id')->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.partner', 'users.source', 'users.sponsor', 'users.gender', 'users.browser_locale', 'users.used_locale', 'users.credentials_validated', 'users.ip', 'countries.postal_code', 'countries.city', 'countries.region_name', 'countries.country_name')->get();
 			} else {
-				$u = $d->select('id', 'first_name', 'last_name', 'email', 'partner', 'source', 'sponsor', 'gender', 'browser_locale', 'used_locale', 'credentials_validated', 'ip', 'created_at', 'updated_at')->skip($skip)->take($take)->get();
+				$u = $d->join('countries', 'users.id', '=', 'countries.user_id')->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.partner', 'users.source', 'users.sponsor', 'users.gender', 'users.browser_locale', 'users.used_locale', 'users.credentials_validated', 'users.ip', 'countries.postal_code', 'countries.city', 'countries.region_name', 'countries.country_name')->skip($skip)->take($take)->get();
 			}
 			return $u->toArray();
 		} else {
