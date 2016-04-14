@@ -67,7 +67,11 @@ class ExportsPartnerUsersClass {
             'browser_locale' => 'browser_locale',
             'used_locale' => 'used_locale',
             'credentials_validated' => 'credentials_validated',
-            'ip' => 'ip'
+            'ip' => 'ip',
+            'countries.postal_code' => 'postal_code',
+            'countries.city' => 'city',
+            'countries.region_name' => 'region_name',
+            'countries.country_name' => 'country_name',
         ];
 
         if(! isset($data['skip'])) {$data['skip'] = 0; Log::debug('exports.job.start', ['data' => $data, 'job_id' => $job->getJobId()]);}
